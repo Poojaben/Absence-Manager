@@ -9,9 +9,6 @@ Frontend React
 
 ## To Run Project
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-
 Open terminal and go the location where you want to clone the project.
 
 
