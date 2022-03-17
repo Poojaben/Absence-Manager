@@ -15,12 +15,14 @@ function App() {
     const [confirmed, setConfirmed] = useState(0);
 
     const [isLoading, setIsLoading] = useState(false);
-
+    const [hasError, setHasError] = useState(false);
     /*Task 1: list of absences including the names of the employees.*/
     useEffect(() => {
         /*Task 3: see a total number of absences, with total rejected, total requested and total confirmed*/
         //I don´t want to set state every tiome in loop so i used this variables
         setIsLoading(true);
+        setHasError(false);
+        try {
         let reject = 0
         let request = 0
         let confirm = 0
@@ -40,6 +42,10 @@ function App() {
         setRequested(request)
         setConfirmed(confirm)
         setAbsencesWithMembers(newData)
+        }
+        catch (error) {
+            setHasError(true);
+        }
         setIsLoading(false);
     }, []);
 
@@ -53,7 +59,10 @@ function App() {
 
     return (
         /*Task 7:loading state until the list is available.*/
+        /*Task 8:error state if the list is unavailable.*/
+        /*Task 9: empty state if there are no results.*/
         <React.Fragment>
+            {hasError && <p>Something went wrong.</p>}
             {isLoading ? (
                 <p>Loading ...</p>
             ) : (
@@ -85,7 +94,7 @@ function App() {
                                         <td>{info.type}</td>
                                         <td>{moment(info.endDate).diff(moment(info.startDate), "days") + 1}</td>
                                         <td>{info.memberNote}</td>
-                                        <td>{info.rejectedAt ? "Rejected" : info.confirmedAt ? "Confirm" : "Requested"}</td>
+                                        <td>{info.rejectedAt ? "Rejected" : info.confirmedAt ? "Confirmed" : "Requested"}</td>
                                         <td>{info.admitterNote}</td>
                                     </tr>
                                 );
