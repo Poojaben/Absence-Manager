@@ -13,10 +13,14 @@ function App() {
     const [requested, setRequested] = useState(0);
     const [rejected, setRejected] = useState(0);
     const [confirmed, setConfirmed] = useState(0);
+
+    const [isLoading, setIsLoading] = useState(false);
+
     /*Task 1: list of absences including the names of the employees.*/
     useEffect(() => {
         /*Task 3: see a total number of absences, with total rejected, total requested and total confirmed*/
         //I don´t want to set state every tiome in loop so i used this variables
+        setIsLoading(true);
         let reject = 0
         let request = 0
         let confirm = 0
@@ -36,7 +40,7 @@ function App() {
         setRequested(request)
         setConfirmed(confirm)
         setAbsencesWithMembers(newData)
-
+        setIsLoading(false);
     }, []);
 
    /* Task 2: first 10 absences, with the ability to paginate.*/
@@ -48,7 +52,11 @@ function App() {
 
 
     return (
-
+        /*Task 7:loading state until the list is available.*/
+        <React.Fragment>
+            {isLoading ? (
+                <p>Loading ...</p>
+            ) : (
         <>
             <p>Total Absences = {absencesWithMembers.length}</p>
             <p>Requested = {requested}</p>
@@ -94,7 +102,9 @@ function App() {
                 onPageChange={page => setCurrentPage(page)}
             />
                
-        </>
+                    </>
+            )}
+        </React.Fragment>
     );
 }
 
