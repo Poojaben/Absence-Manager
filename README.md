@@ -9,7 +9,7 @@ Frontend React
 
 ## To Run Project
 
-Open terminal and go the location where you want to clone the project.
+Open terminal and go to the location where you want to clone the project.
 
 
 To install and run project, perform below steps:
