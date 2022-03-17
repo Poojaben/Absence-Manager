@@ -13,9 +13,11 @@ function App() {
     const [requested, setRequested] = useState(0);
     const [rejected, setRejected] = useState(0);
     const [confirmed, setConfirmed] = useState(0);
-
+    const [searchTerm, setSearchTerm] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const [dataLength, setDataLength] = useState(0)
+
     /*Task 1: list of absences including the names of the employees.*/
     useEffect(() => {
         /*Task 3: see a total number of absences, with total rejected, total requested and total confirmed*/
@@ -53,8 +55,24 @@ function App() {
     const currentTableData = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * PageSize;
         const lastPageIndex = firstPageIndex + PageSize;
-        return absencesWithMembers.slice(firstPageIndex, lastPageIndex);
-    }, [currentPage, absencesWithMembers]);
+       /* Task 5, 6: filter absences by type, and date*/
+        let filteredData = absencesWithMembers.filter((val) => {
+            if (searchTerm == "") {
+                return val
+            }
+            else if (
+                val.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                val.startDate.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                val.endDate.toLowerCase().includes(searchTerm.toLowerCase())
+            ) {
+                return val;
+            }
+        })
+        // set filtered data length to handle pagination
+        setDataLength(filteredData.length)
+
+        return filteredData.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, absencesWithMembers, searchTerm]);
 
 
     return (
@@ -71,6 +89,9 @@ function App() {
             <p>Requested = {requested}</p>
             <p>Rejected = {rejected}</p>
             <p>Confirmed = {confirmed}</p>
+            <input type="text" placeholder="search..." onChange={e => setSearchTerm(e.target.value)} />
+
+
                 <table>
                     <thead>
                         <tr>
@@ -84,9 +105,9 @@ function App() {
                     </thead>
                     <tbody>
 
-                    {/*Task 4: Each absence with Member name, Type of absence, Period, Member note, Status and Admitter note */}
-                    {currentTableData.map(
-                            (info, i) => {
+                                {/*Task 4: Each absence with Member name, Type of absence, Period, Member note, Status and Admitter note */}
+                                {currentTableData.map(
+                                    (info, i) => {
 
                                 return (
                                     <tr key={i}>
@@ -106,7 +127,7 @@ function App() {
             <Pagination
                 className="pagination-bar"
                 currentPage={currentPage}
-                totalCount={absences.payload.length}
+                totalCount={dataLength}
                 pageSize={PageSize}
                 onPageChange={page => setCurrentPage(page)}
             />
