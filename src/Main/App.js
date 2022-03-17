@@ -9,17 +9,31 @@ let PageSize = 10;
 function App() {
     const [currentPage, setCurrentPage] = useState(1);
     const [absencesWithMembers, setAbsencesWithMembers] = useState([])
-    
+    const [requested, setRequested] = useState(0);
+    const [rejected, setRejected] = useState(0);
+    const [confirmed, setConfirmed] = useState(0);
     /*Task 1: list of absences including the names of the employees.*/
     useEffect(() => {
-       
+        /*Task 2: see a total number of absences, with total rejected, total requested and total confirmed*/
+        //I don´t want to set state every tiome in loop so i used this variables
+        let reject = 0
+        let request = 0
+        let confirm = 0
         let newData = absences.payload.map((data, d) => {
-            
+            if (data.rejectedAt) {
+                reject += 1
+            } else if (data.confirmedAt) {
+                confirm += 1
+            } else {
+                request += 1
+            }
 
             return { ...data, memberDetails: members.payload.filter(member => member.userId === data.userId) }
 
         })
-        
+        setRejected(reject)
+        setRequested(request)
+        setConfirmed(confirm)
         setAbsencesWithMembers(newData)
 
     }, []);
@@ -35,7 +49,10 @@ function App() {
     return (
 
         <>
-    
+            <p>Total Absences = {absencesWithMembers.length}</p>
+            <p>Requested = {requested}</p>
+            <p>Rejected = {rejected}</p>
+            <p>Confirmed = {confirmed}</p>
                 <table>
                     <thead>
                         <tr>
