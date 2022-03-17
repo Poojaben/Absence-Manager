@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Pagination from '../Pagination';
 import absences from './absences.json';
 import members from './members.json';
+import moment from 'moment';
 import './style.scss';
 
 let PageSize = 10;
@@ -14,7 +15,7 @@ function App() {
     const [confirmed, setConfirmed] = useState(0);
     /*Task 1: list of absences including the names of the employees.*/
     useEffect(() => {
-        /*Task 2: see a total number of absences, with total rejected, total requested and total confirmed*/
+        /*Task 3: see a total number of absences, with total rejected, total requested and total confirmed*/
         //I don´t want to set state every tiome in loop so i used this variables
         let reject = 0
         let request = 0
@@ -56,17 +57,17 @@ function App() {
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            
-                            <th>MemberNote</th>
-                            
-                            <th>AdminNote</th>
+                            <th>Member name</th>
+                            <th>Type of absence</th>
+                            <th>Period(In Days)</th>
+                            <th>Member note (when available)</th>
+                            <th>Status</th>
+                            <th>Admitter note (when available)</th>
                         </tr>
                     </thead>
                     <tbody>
 
-
+                    {/*Task 4: Each absence with Member name, Type of absence, Period, Member note, Status and Admitter note */}
                     {currentTableData.map(
                             (info, i) => {
 
@@ -74,7 +75,9 @@ function App() {
                                     <tr key={i}>
                                         <td>{info.memberDetails[0].name}</td>
                                         <td>{info.type}</td>
-                                         <td>{info.memberNote}</td>
+                                        <td>{moment(info.endDate).diff(moment(info.startDate), "days") + 1}</td>
+                                        <td>{info.memberNote}</td>
+                                        <td>{info.rejectedAt ? "Rejected" : info.confirmedAt ? "Confirm" : "Requested"}</td>
                                         <td>{info.admitterNote}</td>
                                     </tr>
                                 );
