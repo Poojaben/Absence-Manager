@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useMemo, useEffect } from 'react';
+
+import absences from './absences.json';
+import members from './members.json';
+import './style.scss';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    
+    const [absencesWithMembers, setAbsencesWithMembers] = useState([])
+    
+    /*Task 1: list of absences including the names of the employees.*/
+    useEffect(() => {
+       
+        let newData = absences.payload.map((data, d) => {
+            
+
+            return { ...data, memberDetails: members.payload.filter(member => member.userId === data.userId) }
+
+        })
+        
+        setAbsencesWithMembers(newData)
+
+    }, []);
+ 
+
+    return (
+
+        <>
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            
+                            <th>MemberNote</th>
+                            
+                            <th>AdminNote</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                    {absencesWithMembers.map(
+                            (info, i) => {
+
+                                return (
+                                    <tr key={i}>
+                                        <td>{info.memberDetails[0].name}</td>
+                                        <td>{info.type}</td>
+                                         <td>{info.memberNote}</td>
+                                        <td>{info.admitterNote}</td>
+                                    </tr>
+                                );
+                            }
+                        )}
+
+                    </tbody>
+                </table>
+
+               
+        </>
+    );
 }
 
 export default App;
