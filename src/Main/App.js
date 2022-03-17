@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
-
+import Pagination from '../Pagination';
 import absences from './absences.json';
 import members from './members.json';
 import './style.scss';
 
+let PageSize = 10;
 
 function App() {
-    
+    const [currentPage, setCurrentPage] = useState(1);
     const [absencesWithMembers, setAbsencesWithMembers] = useState([])
     
     /*Task 1: list of absences including the names of the employees.*/
@@ -22,7 +23,14 @@ function App() {
         setAbsencesWithMembers(newData)
 
     }, []);
- 
+
+   /* Task 2: first 10 absences, with the ability to paginate.*/
+    const currentTableData = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return absencesWithMembers.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, absencesWithMembers]);
+
 
     return (
 
@@ -42,7 +50,7 @@ function App() {
                     <tbody>
 
 
-                    {absencesWithMembers.map(
+                    {currentTableData.map(
                             (info, i) => {
 
                                 return (
@@ -58,7 +66,13 @@ function App() {
 
                     </tbody>
                 </table>
-
+            <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={absences.payload.length}
+                pageSize={PageSize}
+                onPageChange={page => setCurrentPage(page)}
+            />
                
         </>
     );
